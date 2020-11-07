@@ -1,0 +1,153 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+void add_parity()
+{
+	int count=0,*arr_new,count2=0,m=0;
+	int *arr, r,c, par_,temp;
+	printf("Enter the row size of Bit Frame: ");
+	scanf("%d",&r);
+	printf("Enter the column size of Bit Frame: ");
+	scanf("%d",&c);
+	arr=(int *)malloc(r * c * sizeof(int));
+	printf("Enter Bit Frame:");
+	for(int i=0;i<r;i++)
+	{	for(int j=0;j<c;j++)
+		{	
+			scanf("%d",&temp);
+			if(temp==1 || temp==0)
+				*(arr + i*c + j)=temp;
+			else
+			{
+				printf("invalid input");
+				exit(0);
+			}
+		}
+	}
+	printf("Enter the Parity\n1 for even\n2 for odd:\n");
+	scanf("%d",&par_);
+	printf("your bit stream is : ");
+	for(int i=0;i<r;i++)
+	{
+		for(int j=0;j<c;j++)
+			printf("%d",*(arr + i*c + j)	);
+		printf("\n");
+	}
+	arr_new=(int *)realloc(arr,sizeof(int) * (r+1) * (c+1));
+	int j=0,n;
+	switch(par_)
+	{
+		case 1:
+			for(int i=0;i<r;i=i+(c+1))
+			{	
+				for(j=0;j<c;j++)
+					if (*(arr_new + i*c +j)==1)
+						count= count+1;			
+			
+				if(count%2==0)
+					*(arr_new+(r*c)+i)= 0;  
+				else
+					*(arr_new+(r*c)+i)= 1;
+				int l= (r * c);
+				for(int k=(r*c)-1;k>=(i*c+j);k--)
+				{
+					*(arr_new+l)=*(arr_new+k);
+					l--;
+				}
+			}
+			for(int i=0;i<c;i++)
+			{
+				for(n=1;n<r;n++)
+				{
+					m= i+n*c+n;
+					if(*(arr_new+m)==1)
+						count2++;
+				}
+				if(count%2==0)
+					*(arr_new+(i+n*c+n))= 0;  
+				else
+					*(arr_new+(i+n*c+n))= 1;
+			}
+			
+			break;
+		case 2:
+			/*if(count%2==1)
+				arr[size]= 0;
+			else
+				arr[size]=1;*/
+			break;
+		default:
+			printf("You choose a wrong option");
+			exit(0);
+	}
+	printf("The new bit stream is : ");
+	*(arr+19)=2;
+	for(int i=0;i<r+1;i++)
+	{	for(int j=0;j<c+1;j++)
+			printf("%d",*(arr_new+i*c+j));
+		printf(" ");
+	}
+/*}			
+void check_parity()
+{
+	int *arr,size,count=0,temp,par_;
+	printf("Enter the size of recieved bit frame:");
+	scanf("%d",&size);
+	arr=malloc(size*sizeof(int));
+	printf("Enter the bit frame :");
+	for(int i=0;i<size;i++)
+	{	scanf("%d",&temp);
+		if(temp==1 || temp==0)
+			arr[i]=temp;
+		else
+		{
+			printf("invalid input");
+			exit(0);
+		}
+	}
+	printf("Enter the Parity\n1 for even\n2 for odd:\n");
+	scanf("%d",&par_);
+	for(int i=0;i<size;i++)
+	{
+		if (arr[i]==1)
+			count= count+1;
+	}
+	switch(par_)
+	{
+		case 1:
+			if(count%2==0)
+				printf("The recieved bit frame is correct");
+			else
+				printf("The recieved bit frame is incorrect");
+			break;
+		case 2:
+			if(count%2==1)
+				printf("The recieved bit frame is correct");
+			else
+				printf("The recieved bit frame is incorrect");
+			break;
+		default:
+			printf("You choose a wrong option");
+			exit(0);
+	}*/
+}					
+int main()
+{	
+	int option;
+	printf("Enter\n1 for adding parity for sending data frame\n2 for checking parity bit in recieved data frame\n::");
+	scanf("%d",&option);
+	switch(option)
+	{
+		case 1:
+			add_parity();
+			break;
+		/*case 2:
+			check_parity();
+			break;*/
+		default:
+			printf("Wrong Option");
+			exit(0);
+	}	
+	return 0;
+}
