@@ -88,7 +88,7 @@ void add_parity()
 			printf("%d",*(arr_new+i*c+j));
 		printf(" ");
 	}
-/*}			
+}			
 void check_parity()
 {
 	int *arr,size,count=0,temp,par_;
@@ -130,7 +130,7 @@ void check_parity()
 		default:
 			printf("You choose a wrong option");
 			exit(0);
-	}*/
+	}
 }					
 int main()
 {	
@@ -142,9 +142,9 @@ int main()
 		case 1:
 			add_parity();
 			break;
-		/*case 2:
+		case 2:
 			check_parity();
-			break;*/
+			break;
 		default:
 			printf("Wrong Option");
 			exit(0);
