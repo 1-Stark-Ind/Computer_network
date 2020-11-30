@@ -1,0 +1,96 @@
+/**************************
+
+                            Online C Compiler.
+                Code, Compile, Run and Debug C program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+***************************/
+
+#include <stdio.h>
+#include<stdlib.h>
+#include<string.h>
+int main()
+{
+    int data_size,gen_size,ch=0,len=0;
+    char generator[32],*data,*data1;
+    printf("Enter 1. CRC-8\n2. CRC-10\n3. CRC-16\n3. CRC-32\n::::");
+    scanf("%d",&ch);
+    switch(ch)
+    {
+        case 1:
+            strcpy(generator,"10000111");
+            gen_size=9;
+            break;
+        case 2:
+            strcpy(generator,"11000110101");
+            gen_size=11;
+            break;
+        case 3:
+            strcpy(generator,"1000100000100001");
+            gen_size=17;
+            break;
+        case 4:
+            strcpy(generator,"100000100110000010001110110110111");
+            gen_size=33;
+            break;
+        default:
+            printf("Enter valid input");
+            break;
+    }
+    printf("\nThe generator polynomial is %s",generator);
+    printf("\nEnter the size of the data : ");
+    scanf("%d",&data_size);
+    data=malloc(data_size*sizeof(char));
+    start:
+    if (data_size<gen_size)
+    {
+        printf("\nData size is incorrect.... \nEnter valid data size");
+        goto start;
+    }
+    printf("Enter the data: \n");
+    for(int i=0;i<data_size;i++)
+    {
+        scanf("%s",&data[i]);
+    }
+    data1=malloc(data_size*sizeof(char));
+    strcpy(data1,data);
+    do
+    {
+        for(int i=0;i<gen_size;i++)
+        {
+            if(data1[i]==generator[i])
+            {
+                data1[i]='0';
+            }
+            else
+            {
+                data1[i]='1';
+            }
+        }
+        int k=0;
+        for(int i=0;i<data_size+gen_size-1;i++)
+        {
+            if(data1[i]=='0')
+            {
+                k++;
+            }
+        }
+        if(k==(data_size+gen_size-1))
+            break;
+            
+            while(data1[0]!='1')
+            {
+                for(int i=0;i<data_size+gen_size-1;i++)
+                {
+                    data1[i]=data1[i+1];
+                }
+                data_size--;
+            }
+            len=data_size+gen_size-1;
+    }
+    while(len>gen_size);
+    printf("\nThe remainder is %s",data1);
+    strcat(data,data1);
+    printf("\nThe transmitted data is %s",data);
+    return 0;
+}
