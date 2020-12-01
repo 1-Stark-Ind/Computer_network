@@ -1,96 +1,226 @@
-/**************************
-
-                            Online C Compiler.
-                Code, Compile, Run and Debug C program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-***************************/
-
+#include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
-#include<stdlib.h>
-#include<string.h>
+
+int sender_end()
+{
+  int i = 0, sc, m, k, t;
+  char data_stream[41], *temp,*temp1, carry = '0';
+  printf ("\nEnter 32 bit stream : ");
+  scanf("%s",data_stream);
+  printf("\nEnter the size of Checksum : :");
+  scanf("%d",&sc);
+  temp=(char*)calloc(sc,sizeof(char));
+  temp1=(char*)calloc(sc,sizeof(char));
+  m = sc;
+  k=m-1;
+  for (int i = 0; i <m; i++)
+    {  
+        temp[k] = *(i+data_stream);
+        k--;
+    }
+  if(sc%4 == 0 && sc<32)
+  {while (i < 32)
+    {
+     i = 0;
+     k = m;
+     t = m + sc;
+     while (t > k)
+     {
+     if ((temp[i]== *(data_stream+(t-1))) && (carry == '0'))
+     {
+     if (temp[i] == '1')
+     {
+     temp[i] = '0';
+     carry = '1';
+     }
+     else
+     {
+     temp[i] = '0';
+     carry = '0';
+     }
+     }
+     else if ((temp[i]== *(data_stream+(t-1))) && (carry == '1'))
+     {
+     if (temp[i] == '1')
+     {
+     temp[i] = '1';
+     carry = '1';
+     }
+     else
+     {
+     temp[i] = '1';
+     carry = '0';
+     }
+     }
+     else if ((temp[i]!= *(data_stream+(t-1))) && (carry == '0'))
+     {
+     temp[i] = '1';
+     carry = '0';
+     }
+     else if ((temp[i]!= *(data_stream+(t-1))) && (carry == '1'))
+     {
+     temp[i] = '0';
+     carry = '1';
+     }
+     i++;
+     t--;
+     }
+     m += sc;
+     i += k;
+     
+    } 
+    
+    int b=sc-1;
+    for(int i=0;i<sc;i++)
+    {
+       if (temp[b]=='1')
+       {
+           temp1[i]='0';
+       }
+       else if(temp[b]=='0')
+       {
+           temp1[i]='1';
+       }
+       b--;
+       
+    }
+    printf("\nChecksum is : : %s",temp1);
+    int p=0;
+    for(int i=32;i<sc+32;i++)
+    {
+        *(data_stream+i)=temp[p];
+        p++;
+    }
+    printf("\ndata stream is :: %s",data_stream);
+    return 0;
+  }
+  else
+  {
+      printf("Size of checksum is incorrect");
+      return 2;
+  }
+}
+int receiver_end()
+{
+  
+  int i = 0, sc, m, k, t;
+  char data_stream[64], *temp,*temp1, carry = '0';
+  printf("\nEnter the size of data_stream : :");
+  scanf("%d",&size_);
+  printf ("\nEnter received bit stream : ");
+  scanf("%s",data_stream);
+  if(size_>32)
+  {
+      sc=size_-32;
+  }
+  else{
+      sc=32-size_;
+  }
+  temp=(char*)calloc(sc,sizeof(char));
+  temp1=(char*)calloc(sc,sizeof(char));
+  m = sc;
+  k=m-1;
+  for (int i = 0; i <m; i++)
+    {  
+        temp[k] = *(i+data_stream);
+        k--;
+    }
+  if(sc%4 == 0 && sc<32)
+  {while (i < 32)
+    {
+     i = 0;
+     k = m;
+     t = m + sc;
+     while (t > k)
+     {
+     if ((temp[i]== *(data_stream+(t-1))) && (carry == '0'))
+     {
+     if (temp[i] == '1')
+     {
+     temp[i] = '0';
+     carry = '1';
+     }
+     else
+     {
+     temp[i] = '0';
+     carry = '0';
+     }
+     }
+     else if ((temp[i]== *(data_stream+(t-1))) && (carry == '1'))
+     {
+     if (temp[i] == '1')
+     {
+     temp[i] = '1';
+     carry = '1';
+     }
+     else
+     {
+     temp[i] = '1';
+     carry = '0';
+     }
+     }
+     else if ((temp[i]!= *(data_stream+(t-1))) && (carry == '0'))
+     {
+     temp[i] = '1';
+     carry = '0';
+     }
+     else if ((temp[i]!= *(data_stream+(t-1))) && (carry == '1'))
+     {
+     temp[i] = '0';
+     carry = '1';
+     }
+     i++;
+     t--;
+     }
+     m += sc;
+     i += k;
+     
+    } 
+    
+    int b=sc-1;
+    for(int i=0;i<sc;i++)
+    {
+       if (temp[b]=='1')
+       {
+           temp1[i]='0';
+       }
+       else if(temp[b]=='0')
+       {
+           temp1[i]='1';
+       }
+       b--;
+       
+    }
+    printf("\nChecksum is : : %s",temp1);
+    
+    return 0;
+  }
+  else
+  {
+      printf("Size of checksum is incorrect");
+      return 2;
+  }
+}
 int main()
 {
-    int data_size,gen_size,ch=0,len=0;
-    char generator[32],*data,*data1;
-    printf("Enter 1. CRC-8\n2. CRC-10\n3. CRC-16\n3. CRC-32\n::::");
+    int ch,re= 0;
+    printf("Enter your choice..\n1. For sending a bit stream.\n2. For received bit stream.\n :::");
     scanf("%d",&ch);
     switch(ch)
     {
         case 1:
-            strcpy(generator,"10000111");
-            gen_size=9;
+            do{
+                re=sender_end();
+            }while(re==2);
             break;
         case 2:
-            strcpy(generator,"11000110101");
-            gen_size=11;
-            break;
-        case 3:
-            strcpy(generator,"1000100000100001");
-            gen_size=17;
-            break;
-        case 4:
-            strcpy(generator,"100000100110000010001110110110111");
-            gen_size=33;
+            do{
+                re= receiver_end();
+            }while(re==2);
             break;
         default:
-            printf("Enter valid input");
-            break;
+            printf("Wrong Choice");
+            exit(0);
     }
-    printf("\nThe generator polynomial is %s",generator);
-    printf("\nEnter the size of the data : ");
-    scanf("%d",&data_size);
-    data=malloc(data_size*sizeof(char));
-    start:
-    if (data_size<gen_size)
-    {
-        printf("\nData size is incorrect.... \nEnter valid data size");
-        goto start;
-    }
-    printf("Enter the data: \n");
-    for(int i=0;i<data_size;i++)
-    {
-        scanf("%s",&data[i]);
-    }
-    data1=malloc(data_size*sizeof(char));
-    strcpy(data1,data);
-    do
-    {
-        for(int i=0;i<gen_size;i++)
-        {
-            if(data1[i]==generator[i])
-            {
-                data1[i]='0';
-            }
-            else
-            {
-                data1[i]='1';
-            }
-        }
-        int k=0;
-        for(int i=0;i<data_size+gen_size-1;i++)
-        {
-            if(data1[i]=='0')
-            {
-                k++;
-            }
-        }
-        if(k==(data_size+gen_size-1))
-            break;
-            
-            while(data1[0]!='1')
-            {
-                for(int i=0;i<data_size+gen_size-1;i++)
-                {
-                    data1[i]=data1[i+1];
-                }
-                data_size--;
-            }
-            len=data_size+gen_size-1;
-    }
-    while(len>gen_size);
-    printf("\nThe remainder is %s",data1);
-    strcat(data,data1);
-    printf("\nThe transmitted data is %s",data);
-    return 0;
 }
