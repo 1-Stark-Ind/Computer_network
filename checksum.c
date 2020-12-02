@@ -75,29 +75,56 @@ sender_end ()
 	  i += k;
 
 	}
-
-      int b = sc - 1;
-      for (int i = 0; i < sc; i++)
+    if(carry=='1')
+    {
+        for (int i = 0; i < sc; i++)
 	{
-	  if (temp[b] == '1')
+	  if (temp[i] == '1' && carry =='1')
 	    {
-	      temp1[i] = '0';
+	      temp[i] = '0';
+	      carry='1';
 	    }
-	  else if (temp[b] == '0')
+	  else if (temp[i] == '0' && carry == '1')
 	    {
-	      temp1[i] = '1';
+	      temp[i] = '1';
+	      carry='0';
 	    }
-	  b--;
+	    else if(temp[i]=='1' && carry =='0')
+	    {
+	        temp[i]='1';
+	        carry='0';
+	    }
+	    else if(temp[i]=='0' && carry == '0')
+	    {
+	        temp[i]='0';
+	        carry='0';
+	    }
+	}
 
+	}
+	int b=0;
+	for(int i=sc-1;i>=0;i--)
+	{
+	    if(temp[i]=='1')
+	   {
+	       temp1[b]='0';
+	   } 
+	   else if(temp[i]=='0')
+	   {
+	       temp1[b]='1';
+	   }
+	   b++;
 	}
       printf ("\nChecksum is : : %s", temp1);
       int p = 0;
       for (int i = 32; i < sc + 32; i++)
 	{
-	  *(data_stream + i) = temp[p];
+	  *(data_stream + i) = temp1[p];
 	  p++;
 	}
-      printf ("\ndata stream is :: %s", data_stream);
+	printf ("\ndata stream is ::");
+	for(int i=0;i<sc+32;i++)
+      printf ("%c", *(data_stream+i));
       return 0;
     }
   else
@@ -127,6 +154,7 @@ receiver_end ()
       temp[k] = *(i + data_stream);
       k--;
     }
+
   if (sc % 4 == 0 && sc < 32)
     {
       while (i < 32)
@@ -182,6 +210,7 @@ receiver_end ()
 	  i += k;
 
 	}
+
       i = 0;
       carry = '0';
       for (int y = size_-1; y >=32; y--)
